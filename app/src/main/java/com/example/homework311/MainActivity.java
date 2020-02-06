@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private static final String POINT = ".";
 
-	private static final int DOT_BUTTON = 10;
+	private static final int DOT_BUTTON = R.id.buttonDot;
 
 	private TextView textView;
 	private Button[] numberButtons = new Button[11];
@@ -46,41 +46,28 @@ public class MainActivity extends AppCompatActivity {
 		numberButtons[8] = findViewById(R.id.button8);
 		numberButtons[9] = findViewById(R.id.button9);
 
-		numberButtons[DOT_BUTTON] = findViewById(R.id.buttonDot);
+		numberButtons[10] = findViewById(DOT_BUTTON);
 	}
 
 	private void handlePress(View v) {
-		int index = -1;
-		for (int i = 0; i < numberButtons.length; i++)
-			if (v.getId() == numberButtons[i].getId()) {
-				index = i;
+		switch (v.getId()) {
+			case DOT_BUTTON:
+				dotPress();
 				break;
-			}
-		if (index == -1) {
-			Log.w(TAG, "Unexpected case: no view found with id " + v.getId());
-			return;
+			default:
+				numPress(v.getId());
+				break;
 		}
 
-		changeTextOnPress(index);
 		textView.setText(inputString = trim(inputString));
 	}
 
-	// updates inputString to be applied in handlePress
-	private void changeTextOnPress(int index) {
-		if (index < 10) { // number key case
-			numPress(index);
-			return;
-		}
-
-		switch (index) { // more buttons will be added further
-			case DOT_BUTTON:
-				dotPress();
+	private void numPress(int id) { // proceeds number press
+		for (int i = 0; i < 10; i++)
+			if (id == numberButtons[i].getId()) {
+				inputString += i;
 				return;
-		}
-	}
-
-	private void numPress(int num) { // proceeds number press
-		inputString += num;
+			}
 	}
 
 	private void dotPress() { // proceeds dot press
